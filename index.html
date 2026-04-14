@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculdade Paulo Picanço - Cotação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loginScreen" class="login-screen hidden">
+        <div class="login-card card-premium">
+            <h2>Entrar no sistema</h2>
+            <form id="formLogin" class="login-form">
+                <div class="form-group">
+                    <label for="loginUsuario">Usuário</label>
+                    <input type="text" id="loginUsuario" placeholder="Digite seu nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginSenha">Senha</label>
+                    <input type="password" id="loginSenha" placeholder="Digite sua senha" required>
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+            <p class="login-switch">Usuário criado apenas pelo administrador.</p>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="logo">Faculdade Paulo Picanço</div>
+        <nav>
+            <div class="menu-section">GERAL</div>
+            <button type="button" data-tab="dashboard" class="nav-link active">Dashboard</button>
+            <button type="button" data-tab="cotacao" class="nav-link">Mapa de Cotação</button>
+
+            <div class="menu-section">GESTÃO</div>
+            <button type="button" data-tab="fornecedores" class="nav-link">Fornecedores</button>
+            <button type="button" data-tab="usuarios" class="nav-link">Usuários</button>
+            <button type="button" data-tab="materiais" class="nav-link">Materiais</button>
+            <button type="button" data-tab="relatorio" class="nav-link">Relatório de Gastos</button>
+            <button type="button" data-tab="finalizadas" class="nav-link">Cotações Finalizadas</button>
+            <button type="button" data-tab="gastos" class="nav-link">Gastos por Período</button>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+        <div class="user-bar">
+            <span id="userGreeting">Usuário: -</span>
+            <button id="btnLogout" type="button" class="btn-secondary">Sair</button>
+        </div>
+        <section id="tab-dashboard" class="tab-content">
+            <header class="page-header">
+                <h1>Dashboard de Compras</h1>
+            </header>
+            <div class="stats-row stats-grid">
+                <div class="card-stat"><span>Materiais Cadastrados</span><h2 id="dash-qtd-mat">0</h2></div>
+                <div class="card-stat"><span>Fornecedores</span><h2 id="dash-qtd-emp">0</h2></div>
+                <div class="card-stat"><span>Itens Cotados</span><h2 id="dash-itens-cotados">0</h2></div>
+                <div class="card-stat"><span>Média do Melhor Preço</span><h2 id="dash-media-preco">R$ 0,00</h2></div>
+                <div class="card-stat highlight"><span>Economia Otimizada</span><h2 id="dash-total">R$ 0,00</h2></div>
+            </div>
+            <div class="dashboard-summary card-premium">
+                <h2>Resumo Rápido</h2>
+                <div class="summary-grid">
+                    <div>
+                        <span>Melhor Fornecedor</span>
+                        <strong id="dash-melhor-fornecedor">-</strong>
+                    </div>
+                    <div>
+                        <span>Último Fornecedor</span>
+                        <strong id="dash-ultimo-fornecedor">-</strong>
+                    </div>
+                    <div>
+                        <span>Último Material</span>
+                        <strong id="dash-ultimo-material">-</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-charts chart-grid">
+                <div class="chart-card card-premium">
+                    <div class="chart-card-header"><h3>Gastos Mensais</h3></div>
+                    <div id="chartGastosMensais" class="chart-wrapper"></div>
+                </div>
+                <div class="chart-card card-premium">
+                    <div class="chart-card-header"><h3>Top Dentais Compradas</h3></div>
+                    <div id="chartTopDentais" class="chart-wrapper"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-fornecedores" class="tab-content hidden">
+            <div class="card-premium">
+                <div class="table-header">
+                    <h2>Cadastrar Fornecedores</h2>
+                    <button id="btnLimparFornecedores" type="button" class="btn-secondary">Limpar Todos</button>
+                </div>
+                <form id="formEmpresa" class="inline-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="nomeEmpresa">Nome do Fornecedor</label>
+                        <input type="text" id="nomeEmpresa" placeholder="Ex: Dental Cremer" autocomplete="off" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Adicionar Fornecedor</button>
+                </form>
+                <div id="listaEmpresas" class="chip-container"></div>
+            </div>
+        </section>
+
+        <section id="tab-usuarios" class="tab-content hidden">
+            <div class="card-premium">
+                <div class="table-header">
+                    <div>
+                        <h2>Usuários</h2>
+                        <p>Crie e gerencie logins para cada pessoa.</p>
+                    </div>
+                    <button id="btnNovoUsuario" type="button" class="btn-primary">Novo Usuário</button>
+                </div>
+                <div id="userFormContainer" class="user-form-container hidden">
+                    <form id="formUsuario" class="card-premium" autocomplete="off">
+                        <div class="summary-grid">
+                            <div class="form-group">
+                                <label for="usuarioNome">Nome completo</label>
+                                <input type="text" id="usuarioNome" placeholder="Nome completo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="usuarioEmail">E-mail</label>
+                                <input type="email" id="usuarioEmail" placeholder="email@facpp.edu.br" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="usuarioLogin">Usuário</label>
+                                <input type="text" id="usuarioLogin" placeholder="Nome de login" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="usuarioSenha">Senha</label>
+                                <input type="password" id="usuarioSenha" placeholder="Senha" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="usuarioFuncao">Função</label>
+                                <select id="usuarioFuncao">
+                                    <option value="Solicitante">Solicitante</option>
+                                    <option value="Atendente">Atendente</option>
+                                    <option value="Administrador">Administrador</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="usuarioMatricula">Matrícula/ID</label>
+                                <input type="text" id="usuarioMatricula" placeholder="Matrícula do usuário">
+                            </div>
+                            <div class="form-group">
+                                <label for="usuarioDepartamento">Departamento</label>
+                                <input type="text" id="usuarioDepartamento" placeholder="Departamento (opcional)">
+                            </div>
+                            <div class="form-group form-group--top">
+                                <label for="usuarioAtivo">Usuário ativo</label>
+                                <input type="checkbox" id="usuarioAtivo" checked>
+                            </div>
+                        </div>
+                        <div class="table-actions form-actions">
+                            <button type="submit" class="btn-primary">Salvar Usuário</button>
+                            <button type="button" id="btnCancelarUsuario" class="btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <table class="table-simple">
+                    <thead>
+                        <tr><th>Nome</th><th>E-mail</th><th>Função</th><th>Matrícula</th><th>Status</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody id="corpoUsuarios"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="tab-materiais" class="tab-content hidden">
+            <div class="card-premium">
+                <div class="table-header">
+                    <h2>Cadastro de Material</h2>
+                    <button id="btnLimparMateriais" type="button" class="btn-secondary">Limpar Todos</button>
+                </div>
+                <form id="formMaterial" class="inline-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="nomeMaterial">Nome do Material</label>
+                        <input type="text" id="nomeMaterial" placeholder="Ex: Resina EA3 Opallis" autocomplete="off" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Salvar Produto</button>
+                </form>
+                <table class="table-simple">
+                    <thead><tr><th>Descrição</th><th>Ação</th></tr></thead>
+                    <tbody id="corpoMateriais"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="tab-cotacao" class="tab-content hidden">
+            <div class="card-table">
+                <div class="table-header">
+                    <h2>Mapa de Cotação Dinâmico</h2>
+                    <div class="table-actions">
+                        <span id="saveIndicator" class="save-indicator">Pronto para editar</span>
+                        <button id="btnSalvarCotacao" type="button" class="btn-secondary">💾 Salvar Agora</button>
+                        <button id="btnFinalizarCotacao" type="button" class="btn-primary">✓ Finalizar Cotação</button>
+                        <button id="btnSincronizarSite" type="button" class="btn-secondary">Sincronizar no Site</button>
+                        <button id="btnLimparCotacao" type="button" class="btn-secondary">Limpar Cotação</button>
+                        <button id="btnAdicionarItem" type="button" class="btn-primary">+ Novo Item</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="cotacao-table">
+                        <thead id="headCotacao"></thead>
+                        <tbody id="bodyCotacao"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-relatorio" class="tab-content hidden">
+            <div class="card-premium">
+                <div class="table-header">
+                    <h2>Relatório de Gastos</h2>
+                    <button id="exportRelatorio" type="button" class="btn-primary">Exportar DOC Completo</button>
+                </div>
+                <table class="table-simple" id="tableRelatorio">
+                    <thead>
+                        <tr><th>Produto</th><th>Melhor Fornecedor</th><th>Unit.</th><th>Qtd</th><th>Total</th></tr>
+                    </thead>
+                    <tbody id="corpoRelatorio"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="tab-finalizadas" class="tab-content hidden">
+            <div class="card-premium">
+                <div class="table-header">
+                    <h2>Cotações Finalizadas</h2>
+                    <button id="btnLimparFinalizadas" type="button" class="btn-secondary">Limpar Histórico</button>
+                </div>
+                <div id="listaFinalizadas" class="finalizadas-container"></div>
+            </div>
+        </section>
+
+        <section id="tab-gastos" class="tab-content hidden">
+            <div class="card-premium">
+                <div class="table-header">
+                    <div>
+                        <h2>Gastos por Dia / Mês / Ano</h2>
+                        <div class="period-filters">
+                            <div class="form-group">
+                                <label for="periodoData">Data</label>
+                                <input type="date" id="periodoData">
+                            </div>
+                            <div class="form-group">
+                                <label for="periodoMes">Mês</label>
+                                <input type="month" id="periodoMes">
+                            </div>
+                            <div class="form-group">
+                                <label for="periodoAno">Ano</label>
+                                <input type="number" id="periodoAno" min="2000" max="2100" step="1">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnAtualizarGastos" type="button" class="btn-secondary">Atualizar</button>
+                </div>
+                <div class="summary-grid period-summary-grid">
+                    <div class="card-stat"><span>Gasto na Data</span><h2 id="gasto-dia">R$ 0,00</h2></div>
+                    <div class="card-stat"><span>Gasto no Mês</span><h2 id="gasto-mes">R$ 0,00</h2></div>
+                    <div class="card-stat"><span>Gasto no Ano</span><h2 id="gasto-ano">R$ 0,00</h2></div>
+                </div>
+                <div class="period-table">
+                    <h3>Resumo de Gastos</h3>
+                    <table class="table-simple" id="tableGastosPeriodo">
+                        <thead>
+                            <tr><th>Período</th><th>Total</th></tr>
+                        </thead>
+                        <tbody id="corpoGastosPeriodo"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
